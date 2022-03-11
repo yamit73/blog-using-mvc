@@ -12,12 +12,25 @@ class Pages extends Controller
 
     public function index()
     {
-        echo("home page");
+        $this->view('pages/blog/header');
+        $this->view('pages/blog/main');
+        $this->view('pages/blog/footer');
     }
-
+    public function singleBlog()
+    {
+        $this->view('pages/blog/header');
+        $this->view('pages/blog/singleBlog');
+        $this->view('pages/blog/footer');
+    }
+    public function write()
+    {
+        $this->view('pages/blog/header');
+        $this->view('pages/blog/write');
+        $this->view('pages/blog/footer');
+    }
     public function login()
     {
-        $postdata = $_POST ?? array();
+        //$postdata = $_POST ?? array();
         
         // $user = $this->model('Users')::find_by_username('admin');
 
@@ -30,13 +43,18 @@ class Pages extends Controller
         //     header("Location: /public/admin/dashboard");
         // }
 
-        $this->view('pages/login/header');
-        $this->view('pages/login/main');
-        $this->view('pages/login/footer');
+        $this->view('pages/login/login');
     }
+    // public function dashboard()
+    // {
+    //     $this->view('pages/admin/dashboard/header');
+    //     $this->view('pages/admin/dashboard/nav');
+    //     $this->view('pages/admin/dashboard/header');
+    //     $this->view('pages/admin/dashboard/footer');
+    // }
 
     public function register()
     {
-        $this->view('pages/listUser');
+        $this->view('pages/register/register');
     }
 }

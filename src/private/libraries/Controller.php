@@ -28,7 +28,7 @@ class Controller
 
     public function view($view, $data = [])
     {
-        print_r($data);
+        //print_r($data);
         if (file_exists(APPPATH . '/../private/views/' . $view . '.php')) {
             require_once(APPPATH . '/../private/views/' . $view . '.php');
         } else {
