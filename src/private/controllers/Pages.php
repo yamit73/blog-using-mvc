@@ -13,21 +13,55 @@ class Pages extends Controller
 
     public function index()
     {
+        $data=array();
+        $data=$this->model('Posts')::find('all');
         $this->view('pages/blog/header');
-        $this->view('pages/blog/main');
+        $this->view('pages/blog/main', $data);
         $this->view('pages/blog/footer');
     }
     public function singleBlog()
     {
+        $blogId=$_REQUEST['blogId'] ?? '';
         $this->view('pages/blog/header');
         $this->view('pages/blog/singleBlog');
         $this->view('pages/blog/footer');
     }
     public function write()
     {
+        if (!isset($_SESSION['userdata']) && $_SESSION['userdata']['role']!='writer') {
+            header("location: /public/");
+        }
+        $data=$this->model('Category')::find('all');
+        // foreach($category as $val) {
+        //     echo $val->category_id.'=>'.$val->category_name.'<br>';
+        // }
         $this->view('pages/blog/header');
-        $this->view('pages/blog/write');
+        $this->view('pages/blog/write', $data);
         $this->view('pages/blog/footer');
+    }
+    public function postData()
+    {
+        $post = array();
+        $post['post_id']=rand(100, 1000000000);
+        $post['user_id']=$_SESSION['userdata']['user_id'];
+        $post['category_id']=$_POST['catId'] ?? '';
+        $post['post_title']=$_POST['blogTitle'] ?? '';
+        $post['post_topic']=$_POST['blogTopic'] ?? '';
+        $post['post_description']=$_POST['blogDescription'] ?? '';
+        $post['review_date']=date("Y-m-d");
+        $post['post_content']=$_POST['blogContent'] ?? '';
+        //print_r($post);
+        if ($post['post_title']!='' && $post['post_title']!='' && $post['post_topic']!='' && $post['post_description']!='' && $post['review_date']!='' &&$post['post_content']!='') {
+            $this->model("Posts")::create($post);
+            $this->view('pages/blog/success');
+        } else {
+            echo "<p class='text-danger'>Fill all fields!</br>";
+        }
+        //$this->view('pages/register/register');
+    }
+    public function success()
+    {
+        $this->view('pages/blog/success');
     }
     public function login()
     {
@@ -64,7 +98,7 @@ class Pages extends Controller
         $signUpData['user_email']=$_POST['userEmail'] ?? '';
         $signUpData['password']=$_POST['userPassword'] ?? '';
         $userConfirmPassword=$_POST['userConfirmPassword'] ?? '';
-        print_r($signUpData);
+        //print_r($signUpData);
         if ($signUpData['user_name']!='' && $signUpData['user_email']!='' && $signUpData['password']!='' && $userConfirmPassword!='' && ($signUpData['password']== $userConfirmPassword)) {
             if ($this->model('Users')::find_by_user_email($signUpData['user_email'])) {
                 echo "<p class='text-danger'>User already exist with same email</br>";
