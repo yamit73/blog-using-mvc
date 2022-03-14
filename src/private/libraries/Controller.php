@@ -11,7 +11,7 @@ class Controller
         \ActiveRecord\Config::initialize(function ($cfg) {
             $cfg->set_model_directory(APPPATH . '/../private/models');
             $cfg->set_connections(array(
-                'development' => 'mysql://root:secret@mysql-server/store'));
+                'development' => 'mysql://root:secret@mysql-server/blog'));
         });
 
         /* require_once 'Log.php';

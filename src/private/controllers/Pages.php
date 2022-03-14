@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Libraries\Controller;
+use App\Models\Users;
 
 class Pages extends Controller
 {
@@ -30,31 +31,51 @@ class Pages extends Controller
     }
     public function login()
     {
-        //$postdata = $_POST ?? array();
+        $loginData = $_POST ?? array();
+        $loginData['userEmail']=$_POST['userEmail'] ?? '';
+        $loginData['userPassword']=$_POST['userPassword'] ?? '';
+        $user = $this->model('Users')::find_by_user_email_and_password($loginData['userEmail'], $loginData['userPassword']);
+        $_SESSION['userdata']=$_SESSION['userdata'] ?? array();
+        if (isset($user)) {
+            if ($user->user_id) {
+                $_SESSION['userdata'] = array(
+                    'user_id'=>$user->user_id,
+                    'user_name'=>$user->user_name,
+                    'user_email'=>$user->user_email,
+                    'role'=>$user->role);
+                    print_r($_SESSION['userdata']);
+            }
+            if ($user->role=='admin') {
+                header("Location: /public/admin/dashboard");
+            } else {
+                header("Location: /public/");
+            }
+        } else {
+            echo"<p class='text-danger'>Wrong email or password</p>";
+        }
         
-        // $user = $this->model('Users')::find_by_username('admin');
-
-        // if ($user->user_id) {
-        //     $_SESSION['userdata'] = array(
-        //         'user_id'=>$user->user_id,
-        //         'username'=>$user->username,
-        //         'email'=>$user->email);
-            
-        //     header("Location: /public/admin/dashboard");
-        // }
-
         $this->view('pages/login/login');
     }
-    // public function dashboard()
-    // {
-    //     $this->view('pages/admin/dashboard/header');
-    //     $this->view('pages/admin/dashboard/nav');
-    //     $this->view('pages/admin/dashboard/header');
-    //     $this->view('pages/admin/dashboard/footer');
-    // }
-
     public function register()
     {
+        $signUpData = array();
+        $signUpData['user_id']=rand(1000, 1000000000);
+        $signUpData['user_name']=$_POST['userName'] ?? '';
+        $signUpData['user_email']=$_POST['userEmail'] ?? '';
+        $signUpData['password']=$_POST['userPassword'] ?? '';
+        $userConfirmPassword=$_POST['userConfirmPassword'] ?? '';
+        print_r($signUpData);
+        if ($signUpData['user_name']!='' && $signUpData['user_email']!='' && $signUpData['password']!='' && $userConfirmPassword!='' && ($signUpData['password']== $userConfirmPassword)) {
+            if ($this->model('Users')::find_by_user_email($signUpData['user_email'])) {
+                echo "<p class='text-danger'>User already exist with same email</br>";
+            } else {
+                if ($this->model("Users")::create($signUpData)) {
+                    header("Location: /public/pages/login");
+                }
+            }
+        } else {
+            echo "<p class='text-danger'>Wrong input!</br>";
+        }
         $this->view('pages/register/register');
     }
 }

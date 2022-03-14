@@ -24,6 +24,10 @@
                 </div>
                 <div class="row mt-3">
                     <div class="form-floating mb-3">
+                        <input type="text" class="form-control px-2" name="blogTopic" id="blogTopic" placeholder="Blog title" required>
+                        <label for="blogTopic">Blog topic</label>
+                    </div>
+                    <div class="form-floating mb-3">
                         <input type="text" class="form-control px-2" name="blogTitle" id="blogTitle" placeholder="Blog title" required>
                         <label for="blogTitle">Blog title</label>
                     </div>
