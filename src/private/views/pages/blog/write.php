@@ -1,24 +1,22 @@
+<?php
+global $settings;
+?>
 <main>
     <div class="container">
         <div class="row mt-5">
             <h1 class="text-center text-success bg-info">Write a blog on your favourite topic</h1><hr>
-            <form method="POST">
+            <form method="POST" action="<?php echo $settings['siteurl'];?>/pages/postData">
                 <div class="row">
-                    <div class="col">
-                        <lable for="category">Categories</lable>
-                        <select class="form-select" id="category" aria-label="Default select example">
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select></div>
-                    <div class="col">
-                    <lable for="subCategory">Sub Categories</lable>
-                        <select class="form-select" id="subCategory" aria-label="Default select example">
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                    <div class="col-sm-4">
+                        <lable for="catId">Categories</lable>
+                        <select class="form-select" name="catId" id="catId">
+                            <option name="" selected></option>
+                            <?php
+                            //print_r($data);
+                            foreach ($data as $val) {
+                                echo '<option value="'.$val->category_id.'">'.$val->category_name.'</option>';
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
