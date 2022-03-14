@@ -78,4 +78,9 @@ class Pages extends Controller
         }
         $this->view('pages/register/register');
     }
+    public function logout()
+    {
+        session_unset();
+        header("Location: /public/");
+    }
 }

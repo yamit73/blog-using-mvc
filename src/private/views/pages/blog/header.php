@@ -51,7 +51,7 @@ global $settings;
             <?php else : ?>
                 <a class="nav-link mx-5" href="<?php echo $settings['siteurl']; ?>/admin/dashboard"><?php echo $_SESSION['userdata']['user_name']; ?></a>
               
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" href="<?php echo $settings['siteurl']; ?>/pages/logout?action=logout">Logout</a>
               
             <?php endif ?>
 
