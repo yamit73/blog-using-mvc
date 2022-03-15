@@ -21,23 +21,37 @@ class Pages extends Controller
     }
     public function singleBlog()
     {
-        $blogId=$_REQUEST['blogId'] ?? '';
+        $post_id=$_GET['id'];
+        $post=$this->model('Posts')::find_by_post_id($post_id);
+        $userName=$this->model('Users')::find_by_user_id($post->user_id);
+        $category=$this->model('Category')::find_by_category_id($post->category_id);
+        $data=array(
+            'post_title'=>$post->post_title,
+            'user_name'=>$userName->user_name,
+            'category_name'=>$category->category_name,
+            'post_description'=>$post->post_description,
+            'post_topic'=>$post->post_topic,
+            'publish_date'=>$post->publish_date,
+            'post_content'=>$post->post_content
+        );
         $this->view('pages/blog/header');
-        $this->view('pages/blog/singleBlog');
+        $this->view('pages/blog/singleBlog', $data);
         $this->view('pages/blog/footer');
     }
     public function write()
     {
-        if (!isset($_SESSION['userdata']) && $_SESSION['userdata']['role']!='writer') {
+        if (!isset($_SESSION['userdata'])) {
+            header("location: /public/login/login");
+        }
+        if ($_SESSION['userdata']['role']!='writer') {
             header("location: /public/");
         }
         $data=$this->model('Category')::find('all');
-        // foreach($category as $val) {
-        //     echo $val->category_id.'=>'.$val->category_name.'<br>';
-        // }
         $this->view('pages/blog/header');
         $this->view('pages/blog/write', $data);
         $this->view('pages/blog/footer');
+        
+        
     }
     public function postData()
     {
@@ -69,20 +83,25 @@ class Pages extends Controller
         $loginData['userEmail']=$_POST['userEmail'] ?? '';
         $loginData['userPassword']=$_POST['userPassword'] ?? '';
         $user = $this->model('Users')::find_by_user_email_and_password($loginData['userEmail'], $loginData['userPassword']);
-        $_SESSION['userdata']=$_SESSION['userdata'] ?? array();
+        
         if (isset($user)) {
-            if ($user->user_id) {
+            if ($user->permission == 'approved') {
+                $_SESSION['userdata']=$_SESSION['userdata'] ?? array();
                 $_SESSION['userdata'] = array(
                     'user_id'=>$user->user_id,
                     'user_name'=>$user->user_name,
                     'user_email'=>$user->user_email,
+                    'permission'=>$user->permission,
                     'role'=>$user->role);
                     print_r($_SESSION['userdata']);
-            }
-            if ($user->role=='admin') {
-                header("Location: /public/admin/dashboard");
+
+                if ($user->role=='admin') {
+                    header("Location: /public/admin/dashboard");
+                } else {
+                    header("Location: /public/");
+                }
             } else {
-                header("Location: /public/");
+                echo"<p class='text-danger'>Not authorised to login!</p>";
             }
         } else {
             echo"<p class='text-danger'>Wrong email or password</p>";
