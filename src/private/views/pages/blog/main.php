@@ -3,14 +3,16 @@ global $settings;
 ?>
 <main class="container-fluid">
 
-<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark d-block w-100">
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark d-block w-75 m-auto">
   <div class="col-md-6 px-0 m-auto">
     <?php
     foreach ($data as $val) {
-        echo '<h1 class="display-4 fst-italic">'.$val->post_title.'</h1>
-              <p class="lead my-3">'.$val->post_description.'</p>
-              <p class="lead mb-0"><a href="'.$settings['siteurl'].'/pages/blog/singleBlog?postId='.$val->post_id.'" class="text-white fw-bold">Continue reading...</a></p>';
-        break;
+        if ($val->status == 'publish') {
+            echo '<h1 class="display-4 fst-italic">'.$val->post_title.'</h1>
+                <p class="lead my-3">'.$val->post_description.'</p>
+                <p class="lead mb-0"><a href="'.$settings['siteurl'].'/pages/singleBlog&id='.$val->post_id.'" class="text-white fw-bold">Continue reading...</a></p>';
+            break;
+        }
     }
     
     ?>
@@ -22,29 +24,31 @@ global $settings;
     <?php
     $i=1;
     foreach ($data as $val) {
-        if ($i<=2) {
-            echo '<div class="col-md-6">
-                    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                      <div class="col p-4 d-flex flex-column position-static">
-                        <h3 class="mb-0 text-success">'.$val->post_title.'</h3>
-                        <div class="mb-1 text-muted">'.$val->publish_date.'</div>
-                        <p class="mb-auto">'.$val->post_description.'.......</p>
-                        <a href="'.$settings['siteurl'].'/pages/blog/singleBlog?postId='.$val->post_id.'" class="stretched-link">Continue reading</a>
-                      </div>
-                      <div class="col-auto d-none d-lg-block">
-                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img"
-                          aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-                          <title>Placeholder</title>
-                          <rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef"
-                            dy=".3em">Thumbnail</text>
-                        </svg>
-                
-                      </div>
-                    </div>
-                  </div>';
-                  $i+=1;
-        } else {
-            break;
+        if ($val->status == 'publish') {
+            if ($i<=2) {
+                echo '<div class="col-md-6">
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                          <div class="col p-4 d-flex flex-column position-static">
+                            <h3 class="mb-0 text-success">'.$val->post_title.'</h3>
+                            <div class="mb-1 text-muted">'.$val->publish_date.'</div>
+                            <p class="mb-auto">'.$val->post_description.'.......</p>
+                            <a href="'.$settings['siteurl'].'/pages/singleBlog&id='.$val->post_id.'" class="stretched-link">Continue reading</a>
+                          </div>
+                          <div class="col-auto d-none d-lg-block">
+                            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img"
+                              aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                              <title>Placeholder</title>
+                              <rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef"
+                                dy=".3em">Thumbnail</text>
+                            </svg>
+                    
+                          </div>
+                        </div>
+                      </div>';
+                      $i+=1;
+            } else {
+                break;
+            }
         }
     }
     
@@ -53,10 +57,10 @@ global $settings;
 
 <div class="row g-5">
   <div class="col-md-8">
-  <?php
+    <?php
     $i=1;
     foreach ($data as $val) {
-        if ($i>2) {
+        if ($i>2 && $val->status == 'publish') {
             echo '<div class="row">
                     <div class="col-md-9">
                       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -64,7 +68,7 @@ global $settings;
                           <h3 class="mb-0 text-success">'.$val->post_title.'</h3>
                           <div class="mb-1 text-muted">'.$val->publish_date.'</div>
                           <p class="mb-auto">'.$val->post_description.'.....</p>
-                          <a href="'.$settings['siteurl'].'/pages/blog/singleBlog?postId='.$val->post_id.'" class="stretched-link">Continue reading</a>
+                          <a href="'.$settings['siteurl'].'/pages/singleBlog&id='.$val->post_id.'" class="stretched-link">Continue reading</a>
                         </div>
                         <div class="col-auto d-none d-lg-block">
                           <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img"
@@ -86,10 +90,27 @@ global $settings;
     }
   
     ?>
-
   </div>
+  <div class="col-md-4">
+    <div class="position-sticky" style="top: 2rem;">
+      <div class="p-4 mb-3 bg-light rounded">
+        <h4 class="fst-italic  text-success">About</h4>
+        <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers,
+          content, or something else entirely. Totally up to you.</p>
+      </div>
 
-  <?php require_once("category.php"); ?>
-</div>
+      <div class="p-4">
+        <h4 class="fst-italic  text-success">Categories</h4>
+          <ol class="list-unstyled">
+            <li><a href="#">Technology</a></li>
+            <li><a href="#">Tech News</a></li>
+            <li><a href="#">New Launches</a></li>
+            <li><a href="#">Fashion</a></li>
+            <li><a href="#">Cooking</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </main>
