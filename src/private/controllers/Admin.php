@@ -123,7 +123,7 @@ class Admin extends Controller
         if (!isset($userdata['user_id']) || $userdata['role'] != 'admin') {
             header("Location: /public/pages/login");
         }
-        $posts=$this->model('Posts')::find('all');
+        $posts=$this->model('Posts')::find('all', array('order' => 'review_date asc'));
         //print_r($posts);
         $data=array();
         foreach ($posts as $val) {
