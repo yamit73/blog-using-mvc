@@ -34,15 +34,6 @@ global $settings;
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="#">Technology</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Science</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">New Launches</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="<?php echo $settings['siteurl']; ?>/pages/write">Write a Blog</a>
             </li>
           </ul>

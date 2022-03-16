@@ -14,9 +14,12 @@ class Pages extends Controller
     public function index()
     {
         $data=array();
-        $data=$this->model('Posts')::find('all');
+        $data=$this->model('Posts')::find('all', array('order' => 'publish_date desc'));
+        $cat=$this->model('Category')::find('all');
+        //print_r($cat);
         $this->view('pages/blog/header');
         $this->view('pages/blog/main', $data);
+        $this->view('pages/blog/category', $cat);
         $this->view('pages/blog/footer');
     }
     public function singleBlog()
@@ -25,6 +28,7 @@ class Pages extends Controller
         $post=$this->model('Posts')::find_by_post_id($post_id);
         $userName=$this->model('Users')::find_by_user_id($post->user_id);
         $category=$this->model('Category')::find_by_category_id($post->category_id);
+        $cat=$this->model('Category')::find('all');
         $data=array(
             'post_title'=>$post->post_title,
             'user_name'=>$userName->user_name,
@@ -36,6 +40,18 @@ class Pages extends Controller
         );
         $this->view('pages/blog/header');
         $this->view('pages/blog/singleBlog', $data);
+        $this->view('pages/blog/category', $cat);
+        $this->view('pages/blog/footer');
+    }
+
+    public function blogbycategory()
+    {
+        $id=$_GET['catId'];
+        $posts=$this->model('Posts')::find('all', array('conditions' => array('category_id=?', $id)));
+        $cat=$this->model('Category')::find('all');
+        $this->view('pages/blog/header');
+        $this->view('pages/blog/blogbycategory', $posts);
+        $this->view('pages/blog/category', $cat);
         $this->view('pages/blog/footer');
     }
     public function write()
@@ -64,7 +80,6 @@ class Pages extends Controller
         $post['post_description']=$_POST['blogDescription'] ?? '';
         $post['review_date']=date("Y-m-d");
         $post['post_content']=$_POST['blogContent'] ?? '';
-        //print_r($post);
         if ($post['post_title']!='' && $post['post_title']!='' && $post['post_topic']!='' && $post['post_description']!='' && $post['review_date']!='' &&$post['post_content']!='') {
             $this->model("Posts")::create($post);
             $this->view('pages/blog/success');
