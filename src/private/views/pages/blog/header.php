@@ -40,7 +40,7 @@ global $settings;
             <?php if (!isset($_SESSION['userdata'])) : ?>
               <a type="button" class="btn btn-outline-success mx-1" href="<?php echo $settings['siteurl'];?>/pages/login">Login/SignUp </a>
             <?php else : ?>
-                <a class="nav-link mx-5" href="<?php echo $settings['siteurl']; ?>/admin/dashboard"><?php echo $_SESSION['userdata']['user_name']; ?></a>
+                <a class="nav-link mx-5" href="<?php echo $settings['siteurl']; ?>/admin/dashboard&currentSection=myprofile"><?php echo $_SESSION['userdata']['user_name']; ?></a>
               
                 <a class="nav-link" href="<?php echo $settings['siteurl']; ?>/pages/logout?action=logout">Logout</a>
               

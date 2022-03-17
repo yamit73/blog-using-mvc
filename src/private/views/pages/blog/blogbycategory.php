@@ -3,8 +3,8 @@ global $settings;
 ?>
 <main class="container-fluid">
 
-<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark d-block w-75 m-auto">
-  <div class="col-md-6 px-0 m-auto">
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark d-block w-75 m-auto mt-3">
+  <div class="col px-0">
     <?php
     foreach ($data as $val) {
         if ($val->status == 'publish') {
