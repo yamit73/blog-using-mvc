@@ -75,7 +75,9 @@
     height: 100%;
     border-radius: 0 3px 3px 0;
   }
-  
+  .ovr {
+    overflow:hidden;
+  }
   .flex-auto {
     flex: 0 0 auto;
   }

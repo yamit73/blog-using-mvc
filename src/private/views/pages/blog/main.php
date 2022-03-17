@@ -3,8 +3,8 @@ global $settings;
 ?>
 <main class="container-fluid">
 
-<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark d-block w-75 m-auto">
-  <div class="col-md-6 px-0 m-auto">
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark d-block w-75 m-auto mt-3">
+  <div class="col px-0">
     <?php
     foreach ($data as $val) {
         if ($val->status == 'publish') {
@@ -31,7 +31,7 @@ global $settings;
                           <div class="col p-4 d-flex flex-column position-static">
                             <h3 class="mb-0 text-success">'.$val->post_title.'</h3>
                             <div class="mb-1 text-muted">'.$val->publish_date.'</div>
-                            <p class="mb-auto">'.$val->post_description.'.......</p>
+                            <p class="mb-auto ovr">'.$val->post_description.'.......</p>
                             <a href="'.$settings['siteurl'].'/pages/singleBlog&id='.$val->post_id.'" class="stretched-link">Continue reading</a>
                           </div>
                           <div class="col-auto d-none d-lg-block">

@@ -23,13 +23,6 @@ class Admin extends Controller
             header("Location: /public/pages/login");
         }
         $currentSection=$_GET['currentSection'] ?? '';
-        // $join = ' JOIN users u ON(posts.post_user_id = u.user_id)';
-        // $data['posts'] = $this->model('Posts')::find_by_sql("SELECT
-        // `posts`.*,`u`.`username`
-        // FROM
-        // `posts` JOIN `users` u
-        // ON(posts.post_user_id = u.user_id)");
-        // var_dump($this->model('Posts')::connection()->last_query);
         $this->view('pages/admin/dashboard/header');
         $this->view('pages/admin/dashboard/nav');
         $this->view('pages/admin/dashboard/sidebar');
@@ -123,7 +116,7 @@ class Admin extends Controller
         if (!isset($userdata['user_id']) || $userdata['role'] != 'admin') {
             header("Location: /public/pages/login");
         }
-        $posts=$this->model('Posts')::find('all', array('order' => 'review_date asc'));
+        $posts=$this->model('Posts')::find('all', array('order' => 'review_date desc'));
         //print_r($posts);
         $data=array();
         foreach ($posts as $val) {

@@ -24,12 +24,15 @@ class Pages extends Controller
     }
     public function singleBlog()
     {
-        $post_id=$_GET['id'];
+        $post_id=(int)$_GET['id'];
         $post=$this->model('Posts')::find_by_post_id($post_id);
         $userName=$this->model('Users')::find_by_user_id($post->user_id);
         $category=$this->model('Category')::find_by_category_id($post->category_id);
         $cat=$this->model('Category')::find('all');
-        $data=array(
+        $comments=$this->model('Comments')::all(array('conditions' => 'post_id = '.$post_id.''));
+        
+        $data['post']=array(
+            'post_id'=>$post->post_id,
             'post_title'=>$post->post_title,
             'user_name'=>$userName->user_name,
             'category_name'=>$category->category_name,
@@ -38,10 +41,35 @@ class Pages extends Controller
             'publish_date'=>$post->publish_date,
             'post_content'=>$post->post_content
         );
+        $data['comments']=array();
+        foreach ($comments as $val) {
+            $user_name=$this->model('Users')::find(array('select' => 'user_name'), array('conditions' => 'user_id = '.$val->user_id.''));
+            array_push($data['comments'], array(
+                'user_name'=>$user_name->user_name,
+                'comment'=>$val->comment
+            ));
+        }
         $this->view('pages/blog/header');
         $this->view('pages/blog/singleBlog', $data);
         $this->view('pages/blog/category', $cat);
         $this->view('pages/blog/footer');
+    }
+
+    public function comment()
+    {
+        if (!isset($_SESSION['userdata'])) {
+            header("location: /public/login/login");
+        } else {
+            $comment=array(
+                'comment'=>$_POST['comment'],
+                'user_id'=>$_SESSION['userdata']['user_id'],
+                'post_id'=>$_GET['post_id'],
+                'comment_date'=>date('y-m-d')
+            );
+            if ($this->model("Comments")::create($comment)) {
+                header("Location: /public/pages/singleBlog&id=".$_GET['post_id']."");
+            }
+        }
     }
 
     public function blogbycategory()
@@ -111,7 +139,7 @@ class Pages extends Controller
                     print_r($_SESSION['userdata']);
 
                 if ($user->role=='admin') {
-                    header("Location: /public/admin/dashboard");
+                    header("Location: /public/admin/dashboard&currentSection=users");
                 } else {
                     header("Location: /public/");
                 }
